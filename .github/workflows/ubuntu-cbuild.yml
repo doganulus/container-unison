@@ -33,7 +33,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: awsim-desktop
+          context: container_images/ubuntu
           build-args: |
             VERSION=${{ env.VERSION }} 
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
