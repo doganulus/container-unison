@@ -1,4 +1,4 @@
-FROM docker.io/library/ubuntu:24.04 as unison
+FROM docker.io/library/ubuntu:24.04 AS unison
 ARG TARGETARCH TARGETOS TARGETPLATFORM TARGETVARIANT
 
 # Install dependencies
