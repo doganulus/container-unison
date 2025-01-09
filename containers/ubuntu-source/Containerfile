@@ -1,0 +1,48 @@
+FROM docker.io/library/ubuntu:24.04 as unison-release
+ARG TARGETARCH TARGETOS TARGETPLATFORM TARGETVARIANT
+
+ARG UNISON_VERSION=2.53.7
+ARG UNISON_PLATFORM=ubuntu-x86_64-static
+ARG UNISON_DOWNLOAD_PATH=https://github.com/bcpierce00/unison/releases/download/v${UNISON_VERSION}/unison-${UNISON_VERSION}-${UNISON_PLATFORM}.tar.gz
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=${TARGETPLATFORM}/var/cache/apt \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update -qq && \
+    apt-get install -qy --no-install-recommends \
+        tar \
+        wget \ 
+        ca-certificates \
+        && \ 
+    apt-get autoremove -y && rm -rf /var/lib/apt/lists/*  
+
+RUN mkdir -p /unison-release && \
+    echo "Downloading Unison ${UNISON_VERSION} from ${UNISON_DOWNLOAD_PATH}" && \
+    wget -qO- ${UNISON_DOWNLOAD_PATH} | tar xz -C /unison-release
+
+
+FROM docker.io/library/ubuntu:24.04 AS unison
+ARG TARGETARCH TARGETOS TARGETPLATFORM TARGETVARIANT
+
+# Install dependencies
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=${TARGETPLATFORM}/var/cache/apt \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update -qq && \
+    apt-get install -qy --no-install-recommends \
+      sudo \
+      tini \
+      openssh-client \
+      && \
+    apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && \
+    echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+ENV TZ=UTC
+
+EXPOSE 22
+
+USER ubuntu
+WORKDIR /home/ubuntu
+
+COPY --from=unison-release /unison-release/bin /usr/bin/
+COPY --chmod=755 ubuntu-24.04/unison.sh /usr/local/bin/unison.sh
+
+CMD [ "/usr/local/bin/unison.sh"]

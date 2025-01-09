@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: doganulus/unison
-  VERSION: ubuntu-24.04
+  VERSION: 2.53.7
 
 jobs:
   build-and-push-image:
@@ -38,5 +38,5 @@ jobs:
           target: unison
           build-args: |
             UNISON_VERSION=${{ env.VERSION }} 
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           push: true
