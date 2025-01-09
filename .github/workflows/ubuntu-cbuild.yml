@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - containers/ubuntu-24.04/**
+      - containers/ubuntu-static/**
       - .github/workflows/ubuntu-cbuild.yml # Self-trigger
 
 env:
@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: containers
-          file: containers/ubuntu-24.04/Containerfile
+          file: containers/ubuntu-static/Containerfile
           target: unison
           build-args: |
             UNISON_VERSION=${{ env.VERSION }} 

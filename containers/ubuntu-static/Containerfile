@@ -43,6 +43,6 @@ USER ubuntu
 WORKDIR /home/ubuntu
 
 COPY --from=unison-release /unison-release/bin /usr/bin/
-COPY --chmod=755 ubuntu-24.04/unison.sh /usr/local/bin/unison.sh
+COPY --chmod=755 ubuntu-static/unison.sh /usr/local/bin/unison.sh
 
 CMD [ "/usr/local/bin/unison.sh"]
