@@ -3,13 +3,13 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - container_images/ubuntu/**
+      - containers/ubuntu-24.04/**
       - .github/workflows/ubuntu-cbuild.yml # Self-trigger
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: doganulus/unison
-  VERSION: latest
+  VERSION: ubuntu-24.04
 
 jobs:
   build-and-push-image:
@@ -33,9 +33,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: container_images/ubuntu
-          file: container_images/ubuntu/Containerfile
+          context: containers/ubuntu-24.04
+          file: containers/ubuntu-24.04/Containerfile
           build-args: |
-            VERSION=${{ env.VERSION }} 
+            UNISON_VERSION=${{ env.VERSION }} 
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           push: true

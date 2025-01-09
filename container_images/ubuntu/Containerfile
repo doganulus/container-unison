@@ -1,8 +1,0 @@
-FROM docker.io/library/ubuntu:24.04 as unison
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        unison-2.53 \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/bin/unison-2.53 /usr/bin/unison
-
-ENTRYPOINT ["/usr/bin/unison"]
